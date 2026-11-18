@@ -7,7 +7,7 @@
   --ink: #442b22;
   --muted: #745244;
   --line: #e9d1af;
-  --key-size: 48px;
+  --key-size: 96px;
 }
 
 * { box-sizing: border-box; }
@@ -54,7 +54,7 @@ button:disabled { cursor: default; opacity: .53; }
 .game {
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto auto;
-  gap: 9px;
+  gap: 6px;
   width: min(100%, 485px);
   height: 100vh;
   height: 100dvh;
@@ -107,8 +107,6 @@ h1 {
 }
 
 .pause svg, .dpad svg {
-  width: 22px;
-  height: 22px;
   fill: none;
   stroke: currentColor;
   stroke-width: 2.5;
@@ -121,7 +119,7 @@ h1 {
 .hud {
   display: grid;
   grid-template-columns: 1.15fr 1.15fr 1fr .75fr;
-  padding: 7px 2px;
+  padding: 4px 2px;
   border: 1px solid var(--line);
   border-radius: 15px;
   background: #fffbef;
@@ -133,7 +131,7 @@ h1 {
   align-content: center;
   justify-items: center;
   min-width: 0;
-  min-height: 37px;
+  min-height: 34px;
   gap: 1px;
 }
 
@@ -382,19 +380,31 @@ canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
 .controls {
   display: grid;
-  gap: 6px;
+  gap: 4px;
+  min-width: 0;
   justify-items: center;
   align-content: center;
 }
 
 .dpad {
+  --detail-size: calc(var(--key-size) * 22 / 48);
   display: grid;
-  grid-template-columns: repeat(3, var(--key-size));
-  grid-template-rows: repeat(3, var(--key-size));
+  width: min(100%, calc(3 * var(--key-size) + 6px));
+  aspect-ratio: 1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
   gap: 3px;
 }
 
+.dpad svg, .pad-center {
+  width: min(var(--detail-size), 50%);
+  height: auto;
+  aspect-ratio: 1;
+}
+
 .dpad button {
+  width: 100%;
+  aspect-ratio: 1;
   padding: 0;
   border: 1px solid #d4aa77;
   border-radius: 13px;
@@ -415,9 +425,7 @@ canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 .pad-center {
   grid-area: 2 / 2;
   place-self: center;
-  width: 22px;
-  height: 22px;
-  border: 5px solid #ffedca;
+  border: calc(var(--key-size) * 5 / 48) solid #ffedca;
   border-radius: 50%;
   background: #dfb87b;
   box-shadow: 0 0 0 1px #e1bd8d;
@@ -425,9 +433,11 @@ canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
 .hint { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .045em; }
 
+@media (max-height: 827px) {
+  :root { --key-size: clamp(48px, calc((100vh - 540px) / 3), 96px); }
+}
+
 @media (max-height: 740px) {
-  :root { --key-size: 44px; }
-  .game { gap: 7px; }
   .dialog { padding: 12px 14px; }
   .portrait { width: 48px; height: 48px; }
   .rules { margin-top: 7px; }
@@ -435,8 +445,14 @@ canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 }
 
 @media (max-height: 600px) {
+  :root { --key-size: clamp(44px, 16vh, 96px); }
   .game { gap: 5px; }
-  .dpad { grid-template-columns: repeat(4, 44px); grid-template-rows: 44px; }
+  .dpad {
+    width: min(100%, calc(4 * var(--key-size) + 9px));
+    aspect-ratio: auto;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto;
+  }
   .dpad .left { grid-area: 1 / 1; }
   .dpad .up { grid-area: 1 / 2; }
   .dpad .down { grid-area: 1 / 3; }

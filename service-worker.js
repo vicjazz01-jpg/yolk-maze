@@ -2,7 +2,7 @@
 
 const scope = self.registration.scope;
 const prefix = `yolk-maze:${scope}:`;
-const cacheName = `${prefix}v1.0.0`;
+const cacheName = `${prefix}v1.1.0`;
 const assets = [
   "./",
   "./index.html",
@@ -10,7 +10,6 @@ const assets = [
   "./css/style.css",
   "./js/art.js",
   "./js/game.js",
-  "./service-worker.js",
   "./icons/apple-touch-icon.png",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
@@ -42,8 +41,12 @@ self.addEventListener("fetch", event => {
   if (!appUrls.has(url.href)) return;
 
   event.respondWith((async () => {
-    const cache = await caches.open(cacheName);
-    const saved = await cache.match(url.href);
-    return saved || fetch(event.request);
+    const fresh = await fetch(event.request, { cache: "reload" }).catch(() => undefined);
+    const cache = await caches.open(cacheName).catch(() => undefined);
+    if (fresh?.ok) {
+      await cache?.put(url.href, fresh.clone()).catch(() => {});
+      return fresh;
+    }
+    return (await cache?.match(url.href)) || fresh || Response.error();
   })());
 });
