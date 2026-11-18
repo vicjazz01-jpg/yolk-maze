@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#fff4dd">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="蛋黃大冒險">
+  <meta name="description" content="帶著小蛋黃穿過迷宮，吃光芝麻，躲開四個追兵。">
+  <title>蛋黃大冒險</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="./js/art.js" defer></script>
+  <script src="./js/game.js" defer></script>
+</head>
+<body>
+  <main class="game" aria-label="蛋黃大冒險">
+    <header class="masthead">
+      <div class="brand">
+        <img src="./icons/icon-192.png" alt="" width="42" height="42">
+        <h1>蛋黃大冒險</h1>
+      </div>
+      <button class="pause" id="pause" type="button" aria-controls="game-dialog" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12m6-12v12"/></svg>
+        <span>暫停</span>
+      </button>
+    </header>
+
+    <div class="hud" aria-label="遊戲狀態">
+      <div class="stat"><span>分數</span><strong id="score">0</strong></div>
+      <div class="stat"><span>最高</span><strong id="best">0</strong></div>
+      <div class="stat"><span>生命</span><strong class="lives" id="lives" role="img" aria-label="剩下三條命">
+        <i></i><i></i><i></i>
+      </strong></div>
+      <div class="stat"><span>關卡</span><strong id="level">01</strong></div>
+    </div>
+
+    <div class="play-area" id="play-area">
+      <div class="board" id="board">
+        <canvas id="maze" width="456" height="552" aria-label="迷宮。可在迷宮上滑動，或使用方向鍵控制小蛋黃。"></canvas>
+        <div class="veil" id="veil">
+          <section class="dialog" id="game-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+            <img class="portrait" id="dialog-portrait" src="./icons/icon-192.png" alt="" width="66" height="66">
+            <h2 id="dialog-title">蛋黃大冒險</h2>
+            <ul class="rules" id="rules">
+              <li><span class="rule-icon rule-move" aria-hidden="true">↔</span>滑動或用方向鍵走迷宮</li>
+              <li><span class="rule-icon rule-seed" aria-hidden="true"></span>吃光芝麻就能過關</li>
+              <li><span class="rule-icon rule-power" aria-hidden="true"></span>吃金黃能量球，短暫反吃追兵</li>
+              <li><span class="rule-icon rule-heart" aria-hidden="true"></span>每場遊戲有三條命</li>
+            </ul>
+            <p class="dialog-copy" id="dialog-copy"><span>最高分</span> <strong>0</strong></p>
+            <button class="primary" id="primary" type="button">開始遊戲</button>
+            <button class="secondary" id="secondary" type="button" hidden>返回首頁</button>
+          </section>
+        </div>
+        <div class="notice" id="notice" role="status" hidden></div>
+      </div>
+    </div>
+
+    <div class="progress" id="progress">
+      <span class="progress-label" id="progress-label">收集進度</span>
+      <div class="track" aria-hidden="true"><span id="progress-fill"></span></div>
+      <span class="progress-count" id="progress-count">0%</span>
+    </div>
+
+    <div class="controls" id="controls">
+      <div class="dpad" role="group" aria-label="方向控制">
+        <button type="button" class="up" data-direction="0" aria-label="上"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
+        <button type="button" class="left" data-direction="1" aria-label="左"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg></button>
+        <span class="pad-center" aria-hidden="true"></span>
+        <button type="button" class="right" data-direction="3" aria-label="右"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+        <button type="button" class="down" data-direction="2" aria-label="下"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14m-6-6 6 6 6-6"/></svg></button>
+      </div>
+      <p class="hint">也可在迷宮上滑動</p>
+    </div>
+  </main>
+  <script>
+    if ("serviceWorker" in navigator && location.protocol !== "file:") {
+      addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
